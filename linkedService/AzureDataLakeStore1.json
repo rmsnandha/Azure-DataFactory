@@ -1,0 +1,23 @@
+{
+	"name": "AzureDataLakeStore1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDataLakeStore",
+		"typeProperties": {
+			"dataLakeStoreUri": "adl://findcarelake.azuredatalakestore.net",
+			"servicePrincipalId": "68d512e1-d664-4f50-bb0b-d7d869e196bd",
+			"servicePrincipalKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "FC-ADL-KEY"
+			},
+			"tenant": "81cac67a-cd26-4350-b260-10dacf857973",
+			"subscriptionId": "ead5aea8-e662-4627-836e-f893321541b5",
+			"resourceGroupName": "sbx-cust-fcperson-rg-eastus2-01"
+		}
+	}
+}

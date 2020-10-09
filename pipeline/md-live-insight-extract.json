@@ -1,0 +1,83 @@
+{
+	"name": "md-live-insight-extract",
+	"properties": {
+		"activities": [
+			{
+				"name": "extrcat_member_activity",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "CosmosDbMongoDbApiSource",
+						"batchSize": 100
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBatchSize": 1000,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['meId']"
+								},
+								"sink": {
+									"name": "ME_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['profile_id']"
+								},
+								"sink": {
+									"name": "FC_PROFILE_ID",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['insight_id']"
+								},
+								"sink": {
+									"name": "INSIGHT_ID",
+									"type": "Int16"
+								}
+							}
+						],
+						"mapComplexValuesToString": true
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CosmosDbMongoDbApiCollection1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "profile_insight_table",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "insights"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-10-06T18:53:46Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

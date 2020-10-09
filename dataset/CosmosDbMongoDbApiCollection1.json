@@ -1,0 +1,19 @@
+{
+	"name": "CosmosDbMongoDbApiCollection1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CosmosDbMongoDbApi1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MONGO"
+		},
+		"annotations": [],
+		"type": "CosmosDbMongoDbApiCollection",
+		"schema": [],
+		"typeProperties": {
+			"collection": "accountLinks"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

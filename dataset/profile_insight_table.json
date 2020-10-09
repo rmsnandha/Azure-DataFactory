@@ -1,0 +1,58 @@
+{
+	"name": "profile_insight_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "fc_insight_DB",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "SQL-DB"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "FC_PROFILE_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "ME_ID",
+				"type": "nvarchar"
+			},
+			{
+				"name": "INSIGHT_ID",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "ACTIVE",
+				"type": "varchar"
+			},
+			{
+				"name": "CREATE_DTTM",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CREATE_BY",
+				"type": "varchar"
+			},
+			{
+				"name": "UPDATE_DTTM",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "UPDATE_BY",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "fc_personalization",
+			"table": "PROFILE_INSIGHT"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

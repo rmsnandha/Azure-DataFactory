@@ -1,0 +1,12 @@
+{
+	"name": "fc-extract-insight-data",
+	"properties": {
+		"globalParameters": {
+			"GLOBAL_PARAM_1": {
+				"type": "string",
+				"value": "GLOBAL_PARAM_VALUE_1"
+			}
+		}
+	},
+	"location": "centralus"
+}

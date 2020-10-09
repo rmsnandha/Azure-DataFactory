@@ -1,0 +1,292 @@
+{
+	"name": "chronic-insight-extract",
+	"properties": {
+		"activities": [
+			{
+				"name": "read data from mongo",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "CosmosDbMongoDbApiSource",
+						"batchSize": 100,
+						"filter": ""
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['_id']['$oid']"
+								},
+								"sink": {
+									"path": "$['_id']['$oid']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['employeeId']"
+								},
+								"sink": {
+									"path": "$['employeeId']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['employeeRelationship']"
+								},
+								"sink": {
+									"path": "$['employeeRelationship']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['meId']"
+								},
+								"sink": {
+									"path": "$['meId']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['status']"
+								},
+								"sink": {
+									"path": "$['status']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['originator']"
+								},
+								"sink": {
+									"path": "$['originator']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['updateDate']['$date']"
+								},
+								"sink": {
+									"path": "$['updateDate']['$date']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['emailStatus']"
+								},
+								"sink": {
+									"path": "$['emailStatus']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['emailStatusDate']['$date']"
+								},
+								"sink": {
+									"path": "$['emailStatusDate']['$date']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['dataMigrationDate']['$date']"
+								},
+								"sink": {
+									"path": "$['dataMigrationDate']['$date']"
+								}
+							},
+							{
+								"source": {
+									"path": "$['vitalityId']"
+								},
+								"sink": {
+									"path": "$['vitalityId']"
+								}
+							}
+						]
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "CosmosDbMongoDbApiCollection1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Json1",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceFolderPath": "care/source",
+							"vhrMianFileName": "vhrMian.json",
+							"archiveFolder": "care/archive"
+						}
+					}
+				]
+			},
+			{
+				"name": "load insight data",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "read data from mongo",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/nsedhuuz@walgreens.com/sql-connect"
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "archive data file",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "load insight data",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreReadSettings",
+							"recursive": true
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureDataLakeStoreWriteSettings",
+							"copyBehavior": "FlattenHierarchy"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Json1",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceFolderPath": "care/source",
+							"vhrMianFileName": "vhrMian.json"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Json1",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceFolderPath": "care/archive",
+							"vhrMianFileName": "vhrMian.json"
+						}
+					}
+				]
+			},
+			{
+				"name": "delete vhrMain source file",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "archive data file",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "Json1",
+						"type": "DatasetReference",
+						"parameters": {
+							"sourceFolderPath": "care/source",
+							"vhrMianFileName": "vhrMian.json"
+						}
+					},
+					"enableLogging": false,
+					"storeSettings": {
+						"type": "AzureDataLakeStoreReadSettings",
+						"recursive": true
+					}
+				}
+			}
+		],
+		"parameters": {
+			"sourceFolder": {
+				"type": "string",
+				"defaultValue": "care/source"
+			},
+			"archiveFolder": {
+				"type": "string",
+				"defaultValue": "care/archive"
+			},
+			"vhrMainFileName": {
+				"type": "string",
+				"defaultValue": "vhrMain.json"
+			}
+		},
+		"folder": {
+			"name": "insights/chronic"
+		},
+		"annotations": [],
+		"lastPublishTime": "2020-10-09T18:53:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

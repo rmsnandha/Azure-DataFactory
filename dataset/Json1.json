@@ -1,0 +1,42 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStore1",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sourceFolderPath": {
+				"type": "string",
+				"defaultValue": "care/source"
+			},
+			"vhrMianFileName": {
+				"type": "string",
+				"defaultValue": "vhrMian.json"
+			},
+			"archiveFolder": {
+				"type": "string",
+				"defaultValue": "care/archive"
+			}
+		},
+		"folder": {
+			"name": "ADL"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": {
+					"value": "@dataset().vhrMianFileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().sourceFolderPath",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

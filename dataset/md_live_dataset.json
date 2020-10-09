@@ -1,0 +1,33 @@
+{
+	"name": "md_live_dataset",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStore1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ADL"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureDataLakeStoreLocation",
+				"fileName": "md_live_users.json",
+				"folderPath": "care/source"
+			}
+		},
+		"schema": {
+			"type": "object",
+			"properties": {
+				"meId": {
+					"type": "integer"
+				},
+				"mdliveUser": {
+					"type": "boolean"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
